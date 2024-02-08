@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:discount_group_name",
+ "creation": "2024-02-07 14:38:18.855210",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "discount_group_name",
+  "description",
+  "column_break_xijor",
+  "discount",
+  "section_break_g9bes",
+  "discount_group_table"
+ ],
+ "fields": [
+  {
+   "fieldname": "discount_group_name",
+   "fieldtype": "Data",
+   "label": "Discount Group Name",
+   "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_xijor",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "This discount will apply to all items under this discount group",
+   "fieldname": "discount",
+   "fieldtype": "Percent",
+   "label": "Discount(Percentage)"
+  },
+  {
+   "fieldname": "section_break_g9bes",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "discount_group_table",
+   "fieldtype": "Table",
+   "label": "Discount Group Table",
+   "options": "Discount Group Item Table"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-02-07 14:43:30.657610",
+ "modified_by": "Administrator",
+ "module": "Formula",
+ "name": "Discount Group",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

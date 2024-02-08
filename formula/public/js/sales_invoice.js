@@ -53,7 +53,6 @@ frappe.ui.form.on('Sales Invoice', {
         
     },
     validate(frm){
-        console.log("Hello")
         frm.set_value("custom_converted_rate", "")
         frm.set_value("custom_converted_qty","")
         frm.set_value("custom_item_to_convert", "")
@@ -63,7 +62,7 @@ frappe.ui.form.on('Sales Invoice', {
 
 
 frappe.ui.form.on('Sales Invoice Item', {
-    // cdt is Child DocType name i.e Quotation Item
+    // cdt is Child DocType name i.e Sales Invoice Item
     // cdn is the row name for e.g bbfcb8da6a
     uom(frm, cdt, cdn) {
         let row = frappe.get_doc(cdt, cdn);
@@ -75,7 +74,6 @@ frappe.ui.form.on('Sales Invoice Item', {
                 "item":row.item_name
             },
             callback:function(r){
-                console.log(r)
                 row.warehouse = r.message.warehouse
                 row.rate = r.message.uom_rate
                 row.base_rate = r.message.uom_rate
@@ -85,13 +83,18 @@ frappe.ui.form.on('Sales Invoice Item', {
                 // row.amount = r.message.uom_rate * row.qty
                 // row.base_amount = r.message.uom_rate * row.qty
                 cur_frm.refresh_field("items")
-                cur_frm.refresh_fields()
-                cur_frm.cscript.calculate_taxes_and_totals();
+                //cur_frm.refresh_fields()
+                //cur_frm.cscript.calculate_taxes_and_totals();
 
 
             }
 
         })
+        //add discount percentage
+    },
+    qty(frm,cdt,cdn){
+        let row = frappe.get_doc(cdt, cdn);
+        
     }
 })
 
