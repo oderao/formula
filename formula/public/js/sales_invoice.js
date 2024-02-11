@@ -92,8 +92,24 @@ frappe.ui.form.on('Sales Invoice Item', {
         })
         //add discount percentage
     },
-    qty(frm,cdt,cdn){
+    item_code(frm,cdt,cdn){
         let row = frappe.get_doc(cdt, cdn);
+        
+        var stock_balance_wrapper = frm.fields_dict.custom_item_stock_balance.wrapper
+        $(stock_balance_wrapper).html("")
+        console.log("yessss")
+        frappe.call({
+            method:"formula.utils.get_html_for_stock_balance",
+            args:{
+                "item": row.item_code,
+            },
+            callback:function(r){
+                if (r.message){
+                    $(r.message).appendTo(stock_balance_wrapper);
+                    
+                }
+            }
+        })
         
     }
 })

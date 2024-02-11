@@ -69,3 +69,58 @@ def get_converted_rate_and_qty(item,qty,convert_from,convert_to):
 		converted_rate = amount_to_sell_at
 		
 		return {"converted_rate":converted_rate,"converted_qty":converted_qty}
+
+@frappe.whitelist()
+def get_html_for_stock_balance(item):
+	
+	html_template = """<!DOCTYPE html>
+	<html>
+	<head>
+	<style>
+	table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+	}
+
+	td, th {
+	border: 1px solid #dddddd;
+	text-align: left;
+	padding: 8px;
+	}
+
+	tr:nth-child(even) {
+	background-color: #dddddd;
+	}
+	</style>
+	</head>
+	<body>
+	<div class="uom_table">
+	<h2>Item Stock Balance</h2>
+
+	<table>
+	<tr>
+		<th>UOM</th>
+		<th>Warehouse</th>
+		<th>Stock Balance</th>
+	</tr>
+	{% for uom in uoms %}
+		<tr>
+			<td>{{uom["uom"]}}</td>
+			<td>{{uom["custom_warehouse"]}}</td>
+			<td>{{uom["stock_balance"]}}</td>
+		</tr>
+	{% endfor %}
+	
+	</table>
+	<div>
+	</body>
+	</html>"""
+	
+	uom_list = frappe.get_all("UOM Conversion Detail",{"parent":item},["uom","custom_uom_rate","custom_warehouse"])
+	for i in uom_list:
+		i["stock_balance"] = str(get_stock_balance(item,i["custom_warehouse"])) 
+  
+	contxt_dict = {"uoms":uom_list}
+	return frappe.render_template(html_template,contxt_dict)
+ 
