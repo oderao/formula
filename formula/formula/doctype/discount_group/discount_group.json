@@ -13,6 +13,7 @@
   "column_break_xijor",
   "discount",
   "section_break_g9bes",
+  "customer_discount_table",
   "discount_group_table"
  ],
  "fields": [
@@ -46,11 +47,17 @@
    "fieldtype": "Table",
    "label": "Discount Group Table",
    "options": "Discount Group Item Table"
+  },
+  {
+   "fieldname": "customer_discount_table",
+   "fieldtype": "Table",
+   "label": "Customer Discount Table",
+   "options": "Discount Group Customer"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-07 14:43:30.657610",
+ "modified": "2024-02-12 01:45:42.950107",
  "modified_by": "Administrator",
  "module": "Formula",
  "name": "Discount Group",

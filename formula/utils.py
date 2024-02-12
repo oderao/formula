@@ -17,19 +17,19 @@ def get_item_uom(doctype, txt, searchfield, start, page_len, filters):
 	return frappe.db.sql(query, filters)
 
 @frappe.whitelist()
-def get_warehouse_and_rate(item,uom):
+def get_warehouse_and_rate(item,uom,customer):
 	if item and uom:
 		warehouse = frappe.db.get_value("UOM Conversion Detail",{"parent":item,"uom":uom},"custom_warehouse")
 		
 		uom_rate = frappe.db.get_value("UOM Conversion Detail",{"parent":item,"uom":uom},"custom_uom_rate")
 		
 		#get discounted_rate if item in discount group
-		if frappe.db.exists("Discount Group Item Table",{"item":item}):
-			discount_parent = frappe.db.get_value("Discount Group Item Table",{"item":item},"parent")
-			frappe.log_error("discount_parent",discount_parent)
+		if frappe.db.exists("Discount Group Customer",{"customer":customer}):
+			discount_parent = frappe.db.get_value("Discount Group Customer",{"customer":customer},"parent")
 			if discount_parent:
-				percentage_discount = frappe.db.get_value("Discount Group",discount_parent,"discount")
-				uom_rate = uom_rate - ((percentage_discount / 100) * uom_rate)
+				if frappe.db.exists("Discount Group Item Table",{"parent":discount_parent,"item":item}):
+					percentage_discount = frappe.db.get_value("Discount Group",discount_parent,"discount")
+					uom_rate = uom_rate - ((percentage_discount / 100) * uom_rate)
 		qty = frappe.db.get_value("UOM Conversion Detail",{"parent":item,"uom":uom},"custom_minimum_qty")
 		
 		return {"uom_rate":uom_rate,"warehouse":warehouse,"qty":qty}

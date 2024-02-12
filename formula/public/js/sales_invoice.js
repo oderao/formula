@@ -71,7 +71,8 @@ frappe.ui.form.on('Sales Invoice Item', {
             method:"formula.utils.get_warehouse_and_rate",
             args:{
                 "uom":row.uom,
-                "item":row.item_name
+                "item":row.item_name,
+                "customer" : frm.doc.customer
             },
             callback:function(r){
                 row.warehouse = r.message.warehouse
