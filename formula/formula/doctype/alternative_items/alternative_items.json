@@ -1,36 +1,30 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2024-02-12 01:43:39.127060",
+ "creation": "2024-02-16 01:05:52.158109",
+ "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "customer",
-  "discount"
+  "item"
  ],
  "fields": [
   {
-   "fieldname": "customer",
+   "fieldname": "item",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Customer",
-   "options": "Customer"
-  },
-  {
-   "fieldname": "discount",
-   "fieldtype": "Percent",
-   "in_list_view": 1,
-   "label": "Discount"
+   "label": "Item",
+   "options": "Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-12 19:21:17.877180",
+ "modified": "2024-02-16 01:05:52.158109",
  "modified_by": "Administrator",
  "module": "Formula",
- "name": "Discount Group Customer",
+ "name": "Alternative Items",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

@@ -28,7 +28,10 @@ def get_warehouse_and_rate(item,uom,customer):
 			discount_parent = frappe.db.get_value("Discount Group Customer",{"customer":customer},"parent")
 			if discount_parent:
 				if frappe.db.exists("Discount Group Item Table",{"parent":discount_parent,"item":item}):
-					percentage_discount = frappe.db.get_value("Discount Group",discount_parent,"discount")
+					default_percentage_discount = frappe.db.get_value("Discount Group",discount_parent,"discount")
+					percentage_discount = frappe.db.get_value("Discount Group Customer",{"customer":customer},"discount")
+					if not percentage_discount:
+						percentage_discount = default_percentage_discount or 0
 					uom_rate = uom_rate - ((percentage_discount / 100) * uom_rate)
 		qty = frappe.db.get_value("UOM Conversion Detail",{"parent":item,"uom":uom},"custom_minimum_qty")
 		
@@ -97,17 +100,18 @@ def get_html_for_stock_balance(item):
 	<body>
 	<div class="uom_table">
 	<h2>Item Stock Balance</h2>
+	<hr>
 
 	<table>
 	<tr>
 		<th>UOM</th>
-		<th>Warehouse</th>
+		
 		<th>Stock Balance</th>
 	</tr>
 	{% for uom in uoms %}
 		<tr>
 			<td>{{uom["uom"]}}</td>
-			<td>{{uom["custom_warehouse"]}}</td>
+			
 			<td>{{uom["stock_balance"]}}</td>
 		</tr>
 	{% endfor %}
@@ -123,4 +127,66 @@ def get_html_for_stock_balance(item):
   
 	contxt_dict = {"uoms":uom_list}
 	return frappe.render_template(html_template,contxt_dict)
+ 
+
+@frappe.whitelist()
+def get_html_for_item_alternatives(item):
+	
+	html_template = """<!DOCTYPE html>
+	<html>
+	<head>
+	<style>
+	table {
+	font-family: arial, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
+	}
+
+	td, th {
+	border: 1px solid #dddddd;
+	text-align: right;
+	padding: 8px;
+	}
+
+	tr:nth-child(even) {
+	background-color: #dddddd;
+	}
+	</style>
+	</head>
+	<body>
+	<div class="alter_table">
+	<h2>Alternative Item</h2>
+	<hr>
+
+	<table>
+	<tr>
+		<th>Alternative Item</th>
+		<th>Stock Balance</th>
+	</tr>
+	{% for item in items %}
+		<tr>
+			<td>{{item["item"]}}</td>
+			
+			<td>{{item["stock_balance"]}}</td>
+		</tr>
+	{% endfor %}
+	
+	</table>
+	<div>
+	</body>
+	</html>"""
+	
+	item_list = frappe.get_all("Alternative Items",{"parent":item},["item"])
+	if item_list:
+		for i in item_list:
+			print(i)
+			warehouses = frappe.db.sql(f"""select warehouse from `tabStock Ledger Entry` where item_code = %s GROUP BY(warehouse)""",{i["item"]})
+			if warehouses:
+				warehouses = [element for tupl in warehouses for element in tupl]
+				i["stock_balance"] = 0
+				for warehouse in warehouses:
+					i["stock_balance"] += int(get_stock_balance(item,warehouse)) 
+	
+		contxt_dict = {"items":item_list}
+		return frappe.render_template(html_template,contxt_dict)
  

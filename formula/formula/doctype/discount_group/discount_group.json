@@ -20,7 +20,9 @@
   {
    "fieldname": "discount_group_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Discount Group Name",
+   "reqd": 1,
    "unique": 1
   },
   {
@@ -33,10 +35,12 @@
    "fieldtype": "Column Break"
   },
   {
-   "description": "This discount will apply to all items under this discount group",
+   "description": "This discount will apply if the customer has no discount specified",
    "fieldname": "discount",
    "fieldtype": "Percent",
-   "label": "Discount(Percentage)"
+   "in_list_view": 1,
+   "label": "Discount(Percentage)",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_g9bes",
@@ -57,7 +61,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-12 01:45:42.950107",
+ "modified": "2024-02-15 23:28:13.197371",
  "modified_by": "Administrator",
  "module": "Formula",
  "name": "Discount Group",

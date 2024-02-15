@@ -9,6 +9,11 @@ frappe.ui.form.on('Sales Invoice', {
                 query:"formula.utils.get_item_uom",
             };
         });
+        var stock_balance_wrapper = frm.fields_dict.custom_item_stock_balance.wrapper
+        $(stock_balance_wrapper).html("")
+
+        var item_alternatives_wrapper = frm.fields_dict.custom_item_alternatives.wrapper
+        $(item_alternatives_wrapper).html("")
     },
     custom_item_to_convert(frm){
         //get uom list 
@@ -98,7 +103,9 @@ frappe.ui.form.on('Sales Invoice Item', {
         
         var stock_balance_wrapper = frm.fields_dict.custom_item_stock_balance.wrapper
         $(stock_balance_wrapper).html("")
-        console.log("yessss")
+
+        var item_alternatives_wrapper = frm.fields_dict.custom_item_alternatives.wrapper
+        $(item_alternatives_wrapper).html("")
         frappe.call({
             method:"formula.utils.get_html_for_stock_balance",
             args:{
@@ -107,6 +114,19 @@ frappe.ui.form.on('Sales Invoice Item', {
             callback:function(r){
                 if (r.message){
                     $(r.message).appendTo(stock_balance_wrapper);
+                    
+                }
+            }
+        })
+
+        frappe.call({
+            method:"formula.utils.get_html_for_item_alternatives",
+            args:{
+                "item": row.item_code,
+            },
+            callback:function(r){
+                if (r.message){
+                    $(r.message).appendTo(item_alternatives_wrapper);
                     
                 }
             }
