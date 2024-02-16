@@ -90,7 +90,7 @@ frappe.ui.form.on('Sales Invoice Item', {
                 // row.base_amount = r.message.uom_rate * row.qty
                 cur_frm.refresh_field("items")
                 //cur_frm.refresh_fields()
-                //cur_frm.cscript.calculate_taxes_and_totals();
+                cur_frm.cscript.calculate_taxes_and_totals();
 
 
             }

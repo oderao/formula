@@ -189,4 +189,7 @@ def get_html_for_item_alternatives(item):
 	
 		contxt_dict = {"items":item_list}
 		return frappe.render_template(html_template,contxt_dict)
- 
+
+@frappe.whitelist()
+def set_conversion_factors(items):
+    pass
