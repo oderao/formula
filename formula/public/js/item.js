@@ -1,11 +1,18 @@
 frappe.ui.form.on("Item",{
 
-    validate(frm){
+    after_save(frm){
         //for validate
         frappe.call({
             method:"formula.utils.set_conversion_factors",
             args : {
-                "items" :frm.doc.uoms
+                "items" :frm.doc.uoms,
+                "parent" : frm.doc.name
+            },
+            callback:function(r){
+                cur_frm.refresh_field("uoms")
+                cur_frm.refresh_fields()
+                frm.reload_doc()
+
             }
         })
     }

@@ -1,6 +1,6 @@
 import frappe
 from erpnext.stock.utils import get_stock_balance
-
+import json
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
@@ -191,5 +191,27 @@ def get_html_for_item_alternatives(item):
 		return frappe.render_template(html_template,contxt_dict)
 
 @frappe.whitelist()
-def set_conversion_factors(items):
-    pass
+def set_conversion_factors(items,parent):
+	
+	#get default row
+	if isinstance(items,str):
+		items = json.loads(items)
+	default_packing_qty = frappe.db.get_value("UOM Conversion Detail",{"parent":parent,"custom_is_default":1},"custom_packing_qty")
+	#frappe.db.set_value("UOM Conversion Detail","a59dc42d9d","custom_conversion_factor",13)
+	if default_packing_qty:
+		for item in items:
+			frappe.log_error(item["name"])
+			if item["custom_is_default"]:
+				item["custom_conversion_factor"] = 1
+				# frappe.get_doc(item).save()
+				frappe.db.set_value("UOM Conversion Detail",item["name"],"custom_conversion_factor",1)
+				# frappe.db.set_value("UOM Conversion Detail",item["name"],"conversion_factor",1)
+
+	
+			if item["custom_packing_qty"] and not item["custom_is_default"]:
+				custom_conversion_factor = default_packing_qty/item["custom_packing_qty"]
+				item["custom_conversion_factor"] = custom_conversion_factor
+				# frappe.get_doc(item).save()
+				frappe.db.set_value("UOM Conversion Detail",item["name"],"custom_conversion_factor",custom_conversion_factor)
+				# frappe.db.set_value("UOM Conversion Detail",item["name"],"conversion_factor",1)
+		frappe.db.commit()
