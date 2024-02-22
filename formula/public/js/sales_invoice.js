@@ -85,7 +85,7 @@ frappe.ui.form.on('Sales Invoice Item', {
                 row.base_rate = r.message.uom_rate
                 row.price_list_rate = r.message.uom_rate
                 row.base_price_list_rate = r.message.uom_rate
-                row.qty = r.message.qty
+                // row.qty = r.message.qty
                 // row.amount = r.message.uom_rate * row.qty
                 // row.base_amount = r.message.uom_rate * row.qty
                 cur_frm.refresh_field("items")

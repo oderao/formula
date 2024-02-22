@@ -111,9 +111,9 @@ doctype_js = {"Sales Invoice" : "public/js/sales_invoice.js",
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Item": "formula.overrides.CustomItem"
+}
 
 # Document Events
 # ---------------
