@@ -181,13 +181,13 @@ def get_html_for_item_alternatives(item):
     item_list = frappe.get_all("Alternative Items",{"parent":item},["item"])
     if item_list:
         for i in item_list:
-            print(i)
             warehouses = frappe.db.sql(f"""select warehouse from `tabStock Ledger Entry` where item_code = %s GROUP BY(warehouse)""",{i["item"]})
             if warehouses:
                 warehouses = [element for tupl in warehouses for element in tupl]
+                
                 i["stock_balance"] = 0
                 for warehouse in warehouses:
-                    i["stock_balance"] += int(get_stock_balance(item,warehouse))
+                    i["stock_balance"] += float(get_stock_balance(i["item"],warehouse))
 
         contxt_dict = {"items":item_list}
         return frappe.render_template(html_template,contxt_dict)
