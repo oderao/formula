@@ -5,12 +5,12 @@ frappe.ui.form.on("Item",{
         frappe.call({
             method:"formula.utils.set_conversion_factors",
             args : {
-                "items" :frm.doc.uoms,
+                "items" :frm.doc.custom_conversion_table,
                 "parent" : frm.doc.name,
                 "default_uom" : frm.doc.stock_uom
             },
             callback:function(r){
-                cur_frm.refresh_field("uoms")
+                cur_frm.refresh_field("custom_conversion_table")
                 cur_frm.refresh_fields()
                 frm.reload_doc()
 

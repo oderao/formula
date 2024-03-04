@@ -80,6 +80,7 @@ frappe.ui.form.on('Sales Invoice Item', {
                 "customer" : frm.doc.customer
             },
             callback:function(r){
+                console.log(r)
                 row.warehouse = r.message.warehouse
                 row.rate = r.message.uom_rate
                 row.base_rate = r.message.uom_rate
@@ -90,7 +91,7 @@ frappe.ui.form.on('Sales Invoice Item', {
                 // row.base_amount = r.message.uom_rate * row.qty
                 cur_frm.refresh_field("items")
                 //cur_frm.refresh_fields()
-                cur_frm.cscript.calculate_taxes_and_totals();
+                //cur_frm.cscript.calculate_taxes_and_totals();
 
 
             }
@@ -100,7 +101,7 @@ frappe.ui.form.on('Sales Invoice Item', {
     },
     item_code(frm,cdt,cdn){
         let row = frappe.get_doc(cdt, cdn);
-        
+        row.uom = ""
         var stock_balance_wrapper = frm.fields_dict.custom_item_stock_balance.wrapper
         $(stock_balance_wrapper).html("")
 

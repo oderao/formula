@@ -8,8 +8,8 @@
  "engine": "InnoDB",
  "field_order": [
   "uom",
-  "current_packing_qty",
-  "is_default_packing"
+  "packing_qty",
+  "conversion_factor"
  ],
  "fields": [
   {
@@ -20,28 +20,27 @@
    "options": "UOM"
   },
   {
-   "description": "Current Packing Quantity at warehouse",
-   "fieldname": "current_packing_qty",
+   "fieldname": "conversion_factor",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Current Packing Qty"
+   "label": "Conversion Factor",
+   "read_only": 1
   },
   {
-   "default": "0",
-   "description": "will be used as reference for the conversion between uom's",
-   "fieldname": "is_default_packing",
-   "fieldtype": "Check",
+   "description": "Current Packing Quantity at warehouse",
+   "fieldname": "packing_qty",
+   "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Is Default Packing"
+   "label": "Packing Qty"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-07 21:27:06.562881",
+ "modified": "2024-03-04 20:12:43.204295",
  "modified_by": "Administrator",
  "module": "Formula",
- "name": "Item UOM Table",
+ "name": "Item Conversion Table",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

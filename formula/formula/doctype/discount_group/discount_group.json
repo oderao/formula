@@ -11,6 +11,7 @@
   "discount_group_name",
   "description",
   "column_break_xijor",
+  "enabled",
   "discount",
   "section_break_g9bes",
   "customer_discount_table",
@@ -35,7 +36,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "description": "This discount will apply if the customer has no discount specified",
+   "description": "This discount will act as default if the customer has no discount specified",
    "fieldname": "discount",
    "fieldtype": "Percent",
    "in_list_view": 1,
@@ -57,11 +58,18 @@
    "fieldtype": "Table",
    "label": "Customer Discount Table",
    "options": "Discount Group Customer"
+  },
+  {
+   "default": "0",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Enabled"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-15 23:28:13.197371",
+ "modified": "2024-03-04 19:58:16.169730",
  "modified_by": "Administrator",
  "module": "Formula",
  "name": "Discount Group",

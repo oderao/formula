@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestItemUOMTable(FrappeTestCase):
+class TestItemConversionTable(FrappeTestCase):
 	pass

@@ -26,7 +26,9 @@ def get_warehouse_and_rate(item,uom,customer):
         #get discounted_rate if item in discount group
         if frappe.db.exists("Discount Group Customer",{"customer":customer}):
             discount_parent = frappe.db.get_value("Discount Group Customer",{"customer":customer},"parent")
-            if discount_parent:
+            discount_parent_enabled = frappe.db.get_value("Discount Group",discount_parent,"enabled")
+            frappe.log_error(discount_parent,discount_parent_enabled)
+            if discount_parent and discount_parent_enabled:
                 if frappe.db.exists("Discount Group Item Table",{"parent":discount_parent,"item":item}):
                     default_percentage_discount = frappe.db.get_value("Discount Group",discount_parent,"discount")
                     percentage_discount = frappe.db.get_value("Discount Group Customer",{"customer":customer},"discount")
@@ -197,24 +199,23 @@ def set_conversion_factors(items,parent,default_uom):
     if isinstance(items,str):
         items = json.loads(items)
     
-    default_packing_qty = frappe.db.get_value("UOM Conversion Detail",{"parent":parent,"uom":default_uom},"custom_packing_qty")
+    default_packing_qty = frappe.db.get_value("Item Conversion Table",{"parent":parent,"uom":default_uom},"packing_qty")
     #frappe.db.set_value("UOM Conversion Detail","a59dc42d9d","custom_conversion_factor",13)
-    frappe.log_error("default_packing_qty",default_packing_qty)
     if default_packing_qty:
         for item in items:
-            frappe.log_error("item_uom",item["uom"])
             if item["uom"] == default_uom:
                 # frappe.get_doc(item).save()
-                frappe.log_error()
-                frappe.db.set_value("UOM Conversion Detail",item["name"],"custom_conversion_factor",1)
-                frappe.db.set_value("UOM Conversion Detail",item["name"],"conversion_factor",1)
+                frappe.db.set_value("UOM Conversion Detail",{"uom":item["uom"]},"conversion_factor",1)
+                
+                frappe.db.set_value("Item Conversion Table",item["name"],"conversion_factor",1)
 
 
 
-            if item["custom_packing_qty"] and item["uom"] != default_uom:
-                custom_conversion_factor = default_packing_qty/item["custom_packing_qty"]
-                item["custom_conversion_factor"] = custom_conversion_factor
+            if item["packing_qty"] and item["uom"] != default_uom:
+                custom_conversion_factor = default_packing_qty/item["packing_qty"]
+                item["conversion_factor"] = custom_conversion_factor
                 # frappe.get_doc(item).save()
-                frappe.db.set_value("UOM Conversion Detail",item["name"],"custom_conversion_factor",custom_conversion_factor)
-                frappe.db.set_value("UOM Conversion Detail",item["name"],"conversion_factor",custom_conversion_factor)
+                frappe.db.set_value("UOM Conversion Detail",{"uom":item["uom"]},"conversion_factor",custom_conversion_factor)
+                
+                frappe.db.set_value("Item Conversion Table",item["name"],"conversion_factor",custom_conversion_factor)
         frappe.db.commit()
