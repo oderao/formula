@@ -27,7 +27,6 @@ def get_warehouse_and_rate(item,uom,customer):
         if frappe.db.exists("Discount Group Customer",{"customer":customer}):
             discount_parent = frappe.db.get_value("Discount Group Customer",{"customer":customer},"parent")
             discount_parent_enabled = frappe.db.get_value("Discount Group",discount_parent,"enabled")
-            frappe.log_error(discount_parent,discount_parent_enabled)
             if discount_parent and discount_parent_enabled:
                 if frappe.db.exists("Discount Group Item Table",{"parent":discount_parent,"item":item}):
                     default_percentage_discount = frappe.db.get_value("Discount Group",discount_parent,"discount")
@@ -76,7 +75,7 @@ def get_converted_rate_and_qty(item,qty,convert_from,convert_to):
         return {"converted_rate":converted_rate,"converted_qty":converted_qty}
 
 @frappe.whitelist()
-def get_html_for_stock_balance(item):
+def get_html_for_stock_balance(item,uom):
 
     html_template = """<!DOCTYPE html>
     <html>
@@ -108,13 +107,13 @@ def get_html_for_stock_balance(item):
     <tr>
         <th>UOM</th>
 
-        <th>Stock Balance</th>
+        <th>Converted Stock Balance</th>
     </tr>
     {% for uom in uoms %}
         <tr>
             <td>{{uom["uom"]}}</td>
 
-            <td>{{uom["stock_balance"]}}</td>
+            <td>{{uom["converted_stock_balance"]}}</td>
         </tr>
     {% endfor %}
 
@@ -123,12 +122,21 @@ def get_html_for_stock_balance(item):
     </body>
     </html>"""
 
-    uom_list = frappe.get_all("UOM Conversion Detail",{"parent":item},["uom","custom_uom_rate","custom_warehouse"])
+    uom_list = frappe.get_all("UOM Conversion Detail",{"parent":item},["uom","custom_uom_rate","custom_warehouse","conversion_factor"])
+    #get conversion factor for 
+    conversion_factor = frappe.db.get_value("UOM Conversion Detail",{"parent":item,"uom":uom},"conversion_factor")
     for i in uom_list:
-        i["stock_balance"] = str(get_stock_balance(item,i["custom_warehouse"]))
-
+        if i["uom"] == uom:
+            i["converted_stock_balance"] = get_stock_balance(item,i["custom_warehouse"])
+        
+        else:
+            i["stock_balance"] = get_stock_balance(item,i["custom_warehouse"])
+            i["converted_stock_balance"] = (i["stock_balance"] * conversion_factor)/i["conversion_factor"]
+            #i["converted_stock_balance"] = i["stock_balance"] * i["conversion_factor"]
+        
     contxt_dict = {"uoms":uom_list}
     return frappe.render_template(html_template,contxt_dict)
+
 
 
 @frappe.whitelist()
@@ -163,7 +171,7 @@ def get_html_for_item_alternatives(item):
     <table>
     <tr>
         <th>Alternative Item</th>
-        <th>Stock Balance</th>
+        <th>Stock Balance Across All Warehouses</th>
     </tr>
     {% for item in items %}
         <tr>
