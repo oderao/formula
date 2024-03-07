@@ -53,9 +53,9 @@ frappe.ui.form.on('UOM Conversion Detail', {
     // }
     uom (frm,cdt,cdn){
         row = frappe.get_doc(cdt,cdn)
-        if (row.uom = frm.doc.default_uom){
-            row.is_custom_default = 1
-        }
+        // if (row.uom = frm.doc.default_uom){
+        //     row.is_custom_default = 1
+        // }
     }
    
         
